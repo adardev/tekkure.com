@@ -3,28 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirigiendo a la App...</title>
+    <title>Invitación a Consultorio - Densora</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: #142023;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #142023 0%, #1a3a3a 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
         }
-        .loader {
+        .container {
             text-align: center;
             color: white;
+            max-width: 400px;
+            width: 100%;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #26CBB0 0%, #1da88e 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 4px 20px rgba(38, 203, 176, 0.3);
         }
         .spinner {
             border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid white;
+            border-top: 3px solid #26CBB0;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
@@ -32,114 +50,271 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .error-message {
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #26CBB0;
+        }
+        p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .card {
             background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 400px;
-            margin: 2rem;
-            text-align: center;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
-        .error-message h1 {
-            color: #dc2626;
-            margin-bottom: 1rem;
+        .card h2 {
+            color: #142023;
+            font-size: 20px;
+            margin-bottom: 15px;
         }
-        .error-message p {
+        .card p {
             color: #666;
-            margin-bottom: 1.5rem;
+            font-size: 14px;
         }
-        .error-message a {
-            display: inline-block;
-            background: #2563eb;
+        .btn-primary {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #26CBB0 0%, #1da88e 100%);
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 16px 24px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 16px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .error-message a:hover {
-            background: #1d4ed8;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(38, 203, 176, 0.4);
+        }
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            background: transparent;
+            color: #26CBB0;
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 12px;
+            border: 2px solid #26CBB0;
+            cursor: pointer;
+        }
+        .error-card {
+            background: #fff5f5;
+        }
+        .error-card h2 {
+            color: #dc2626;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .icon-check {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .steps {
+            text-align: left;
+            margin: 15px 0;
+            padding: 0;
+            list-style: none;
+        }
+        .steps li {
+            color: #444;
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 14px;
+        }
+        .steps li::before {
+            content: "•";
+            color: #26CBB0;
+            font-weight: bold;
+            position: absolute;
+            left: 10px;
         }
     </style>
 </head>
 <body>
-    <!-- Estado de carga (se muestra mientras redirige) -->
-    <div id="loading-state" class="loader">
+    <!-- Estado de carga -->
+    <div id="loading-state" class="container">
+        <div class="logo">🦷</div>
         <div class="spinner"></div>
-        <p>Redirigiendo a la app...</p>
+        <h1>Abriendo Densora...</h1>
+        <p>Conectándote con el consultorio</p>
     </div>
 
-    <!-- Estado de error (solo se muestra si hay error) -->
-    <div id="error-state" class="error-message" style="display: none;">
-        <h1>Error</h1>
-        <p id="error-message-text"></p>
-        <a id="error-app-link" href="#" style="display: none;">Abrir en la App</a>
+    <!-- Estado: WebView detectado (WhatsApp, etc.) -->
+    <div id="webview-state" class="container hidden">
+        <div class="logo">🦷</div>
+        <div class="card">
+            <div class="icon-check">📱</div>
+            <h2>Abre en el Navegador</h2>
+            <p>Para unirte al consultorio, necesitas abrir este enlace en tu navegador:</p>
+            <ul class="steps">
+                <li>Toca los 3 puntitos (⋮) arriba a la derecha</li>
+                <li>Selecciona "Abrir en navegador" o "Abrir en Chrome"</li>
+                <li>La app Densora se abrirá automáticamente</li>
+            </ul>
+            <a id="copy-link-btn" href="#" class="btn-primary" onclick="copyLink(); return false;">
+                📋 Copiar Enlace
+            </a>
+            <p style="margin-top: 15px; font-size: 12px; color: #999;">
+                Si ya tienes Densora instalada, el enlace se abrirá automáticamente en la app.
+            </p>
+        </div>
     </div>
 
-    <!-- Cargar script inmediatamente (antes de que termine de cargar el body) -->
+    <!-- Estado: App no instalada (fallback después de timeout) -->
+    <div id="fallback-state" class="container hidden">
+        <div class="logo">🦷</div>
+        <div class="card">
+            <div class="icon-check">📲</div>
+            <h2>¿Tienes Densora instalada?</h2>
+            <p>Si no se abrió la app automáticamente, intenta con el botón de abajo:</p>
+            <a id="open-app-btn" href="#" class="btn-primary">
+                Abrir en Densora
+            </a>
+            <a id="retry-btn" href="#" class="btn-secondary" onclick="location.reload(); return false;">
+                🔄 Reintentar
+            </a>
+        </div>
+    </div>
+
+    <!-- Estado de error -->
+    <div id="error-state" class="container hidden">
+        <div class="logo">🦷</div>
+        <div class="card error-card">
+            <div class="icon-check">⚠️</div>
+            <h2>Enlace Inválido</h2>
+            <p id="error-message-text">El enlace de invitación está incompleto o es inválido. Por favor contacta al administrador del consultorio.</p>
+        </div>
+    </div>
+
     <script>
-        // Código inline para redirección inmediata (más rápido)
-        // Código inline para redirección inmediata (más rápido)
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const consultorioId = urlParams.get("consultorioId");
             const invitacionId = urlParams.get("invitacionId");
             const token = urlParams.get("token");
             
-            function showError(message, showRetry = false, url = '#') {
-                document.getElementById('loading-state').style.display = 'none';
-                const errorState = document.getElementById('error-state');
-                const errorText = document.getElementById('error-message-text');
-                const errorLink = document.getElementById('error-app-link');
+            // Detectar si estamos en un WebView (WhatsApp, Facebook, Instagram, etc.)
+            function isWebView() {
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
                 
-                errorState.style.display = 'block';
-                errorText.textContent = message;
+                // Detectar WebViews comunes
+                const webviewPatterns = [
+                    'FBAN',      // Facebook
+                    'FBAV',      // Facebook
+                    'Instagram', // Instagram
+                    'WhatsApp',  // WhatsApp (aunque generalmente no se detecta así)
+                    'wv',        // Android WebView genérico
+                    'WebView',   // iOS WebView
+                ];
                 
-                if (showRetry) {
-                    errorLink.href = url;
-                    errorLink.style.display = 'inline-block';
-                    errorLink.textContent = 'Intentar abrir App';
-                }
-            }
-
-            if (consultorioId && (invitacionId || token)) {
-                const APP_SCHEME = "densora://aceptar-invitacion";
-                const APP_PACKAGE = "com.tekkure.densora";
-                
-                let appUrl = "";
-                let androidIntent = "";
-                
-                if (token) {
-                    appUrl = `${APP_SCHEME}?consultorioId=${consultorioId}&token=${token}`;
-                    androidIntent = `intent://aceptar-invitacion?consultorioId=${consultorioId}&token=${token}#Intent;scheme=densora;package=${APP_PACKAGE};end`;
-                } else if (invitacionId) {
-                    appUrl = `${APP_SCHEME}?consultorioId=${consultorioId}&invitacionId=${invitacionId}`;
-                    androidIntent = `intent://aceptar-invitacion?consultorioId=${consultorioId}&invitacionId=${invitacionId}#Intent;scheme=densora;package=${APP_PACKAGE};end`;
-                }
-                
-                // Intentar redirigir inmediatamente
-                const startTime = Date.now();
-                
-                if (navigator.userAgent.match(/Android/i)) {
-                    window.location.href = androidIntent;
-                } else {
-                    window.location.href = appUrl;
-                }
-
-                // Fallback si no redirige después de unos segundos
-                setTimeout(() => {
-                    // Si la página sigue visible es porque probablemente no se abrió la app
-                    if (document.visibilityState === 'visible') {
-                        showError('Si la aplicación no se abrió automáticamente, por favor intenta usar el botón de abajo.', true, appUrl);
+                for (const pattern of webviewPatterns) {
+                    if (userAgent.includes(pattern)) {
+                        return true;
                     }
-                }, 3000);
-
-            } else {
-                showError('El enlace de invitación está incompleto o es inválido. Por favor contacta al administrador.');
+                }
+                
+                // Detectar WebView de Android más específicamente
+                if (/Android/.test(userAgent) && /wv|Version\/[\d.]+.*Chrome\/[\d.]+ Mobile/.test(userAgent)) {
+                    return true;
+                }
+                
+                // Detectar si no tiene instalación de PWA disponible (indicador de WebView)
+                // Esto es una heurística, no es 100% precisa
+                if (window.matchMedia && window.matchMedia('(display-mode: browser)').matches === false) {
+                    return false; // Probablemente PWA
+                }
+                
+                return false;
             }
+            
+            function showState(stateId) {
+                document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+                const state = document.getElementById(stateId);
+                if (state) state.classList.remove('hidden');
+            }
+            
+            function showError(message) {
+                document.getElementById('error-message-text').textContent = message;
+                showState('error-state');
+            }
+            
+            // Guardar link para copiar
+            window.currentLink = window.location.href;
+            
+            window.copyLink = function() {
+                navigator.clipboard.writeText(window.currentLink).then(() => {
+                    const btn = document.getElementById('copy-link-btn');
+                    btn.textContent = '✅ ¡Enlace Copiado!';
+                    btn.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                    setTimeout(() => {
+                        btn.textContent = '📋 Copiar Enlace';
+                        btn.style.background = 'linear-gradient(135deg, #26CBB0 0%, #1da88e 100%)';
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback para navegadores antiguos
+                    prompt('Copia este enlace:', window.currentLink);
+                });
+            };
+
+            // Validar parámetros
+            if (!consultorioId || (!invitacionId && !token)) {
+                showError('El enlace de invitación está incompleto o es inválido. Por favor contacta al administrador del consultorio.');
+                return;
+            }
+            
+            // Construir URLs
+            const APP_SCHEME = "densora://aceptar-invitacion";
+            const APP_PACKAGE = "com.tekkure.densora";
+            
+            let appUrl = "";
+            let androidIntent = "";
+            
+            if (token) {
+                appUrl = `${APP_SCHEME}?consultorioId=${consultorioId}&token=${token}`;
+                androidIntent = `intent://aceptar-invitacion?consultorioId=${consultorioId}&token=${token}#Intent;scheme=densora;package=${APP_PACKAGE};end`;
+            } else if (invitacionId) {
+                appUrl = `${APP_SCHEME}?consultorioId=${consultorioId}&invitacionId=${invitacionId}`;
+                androidIntent = `intent://aceptar-invitacion?consultorioId=${consultorioId}&invitacionId=${invitacionId}#Intent;scheme=densora;package=${APP_PACKAGE};end`;
+            }
+            
+            // Guardar URL de la app para el botón de fallback
+            document.getElementById('open-app-btn').href = appUrl;
+            
+            // Si estamos en WebView, mostrar instrucciones para abrir en navegador
+            if (isWebView()) {
+                showState('webview-state');
+                return;
+            }
+            
+            // Intentar redirigir a la app
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const redirectUrl = isAndroid ? androidIntent : appUrl;
+            
+            // Intentar abrir la app
+            window.location.href = redirectUrl;
+            
+            // Si después de 2.5 segundos sigue visible, mostrar fallback
+            setTimeout(() => {
+                if (document.visibilityState === 'visible') {
+                    showState('fallback-state');
+                }
+            }, 2500);
+            
         })();
     </script>
-    <script src="aceptar-invitacion.js"></script>
 </body>
 </html>
-
