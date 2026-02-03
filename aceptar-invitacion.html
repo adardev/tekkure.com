@@ -79,12 +79,29 @@
     <!-- Cargar script inmediatamente (antes de que termine de cargar el body) -->
     <script>
         // Código inline para redirección inmediata (más rápido)
+        // Código inline para redirección inmediata (más rápido)
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const consultorioId = urlParams.get("consultorioId");
             const invitacionId = urlParams.get("invitacionId");
             const token = urlParams.get("token");
             
+            function showError(message, showRetry = false, url = '#') {
+                document.getElementById('loading-state').style.display = 'none';
+                const errorState = document.getElementById('error-state');
+                const errorText = document.getElementById('error-message-text');
+                const errorLink = document.getElementById('error-app-link');
+                
+                errorState.style.display = 'block';
+                errorText.textContent = message;
+                
+                if (showRetry) {
+                    errorLink.href = url;
+                    errorLink.style.display = 'inline-block';
+                    errorLink.textContent = 'Intentar abrir App';
+                }
+            }
+
             if (consultorioId && (invitacionId || token)) {
                 const APP_SCHEME = "densora://aceptar-invitacion";
                 const APP_PACKAGE = "com.tekkure.densora";
@@ -101,16 +118,24 @@
                 }
                 
                 // Intentar redirigir inmediatamente
-                if (androidIntent) {
+                const startTime = Date.now();
+                
+                if (navigator.userAgent.match(/Android/i)) {
                     window.location.href = androidIntent;
-                    setTimeout(() => {
-                        if (document.visibilityState === 'visible') {
-                            window.location.href = appUrl;
-                        }
-                    }, 100);
-                } else if (appUrl) {
+                } else {
                     window.location.href = appUrl;
                 }
+
+                // Fallback si no redirige después de unos segundos
+                setTimeout(() => {
+                    // Si la página sigue visible es porque probablemente no se abrió la app
+                    if (document.visibilityState === 'visible') {
+                        showError('Si la aplicación no se abrió automáticamente, por favor intenta usar el botón de abajo.', true, appUrl);
+                    }
+                }, 3000);
+
+            } else {
+                showError('El enlace de invitación está incompleto o es inválido. Por favor contacta al administrador.');
             }
         })();
     </script>
